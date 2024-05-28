@@ -2,11 +2,19 @@ import React, { useContext } from "react";
 import Layout from "../../components/Layout";
 import myContext from "../../context/data/myContext";
 import { Button } from "@material-tailwind/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import {auth} from "../../Firebase/FirebaseConfig"
 
 function Dashboard() {
   const context = useContext(myContext);
   const { mode } = context;
+  const navigate = useNavigate()
+
+  const logout = async () =>{
+    await auth.signOut()
+    localStorage.clear('admin')
+    navigate('/')
+  }
   return (
     <Layout>
       <div className="py-10">
@@ -62,7 +70,7 @@ function Dashboard() {
                 </div>
               </Link>
               <div className="mb-2">
-                <Button
+                <Button onClick={logout}
                   style={{
                     background:
                       mode === "dark"

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   Card,
   CardHeader,
@@ -8,10 +8,33 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import myContext from "../../context/data/myContext";
+import toast from "react-hot-toast";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import {auth} from '../../Firebase/FirebaseConfig'
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const context = useContext(myContext);
   const { mode } = context;
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const navigate = useNavigate()
+
+  const login = async () => {
+    if(!email || !password) {
+      return toast.error('Please all the required fields')
+    }
+    try {
+      const result = await signInWithEmailAndPassword(auth, email, password)
+      toast.success('Login Successful')
+      localStorage.setItem('admin', JSON.stringify(result))
+      navigate('/dashboard')
+    } catch (error) {
+      toast.error('signin unsuccessful', error.message)
+      console.log(error.message);
+      
+    }
+  }
 
   return (
     <div className="flex justify-center items-center h-screen">
@@ -60,14 +83,14 @@ export default function Login() {
           <form className=" flex flex-col gap-4">
             {/* First Input  */}
             <div>
-              <Input type="email" label="Email" name="email" />
+              <Input type="email" label="Email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} />
             </div>
             {/* Second Input  */}
             <div>
-              <Input type="password" label="Password" />
+              <Input type="password" label="Password" value={password} onChange={(e)=> setPassword(e.target.value)} />
             </div>
             {/* Login Button  */}
-            <Button
+            <Button onClick={login}
               style={{
                 background:
                   mode === "dark" ? "rgb(226, 232, 240)" : "rgb(30, 41, 59)",

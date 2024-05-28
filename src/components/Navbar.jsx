@@ -8,11 +8,11 @@ import {
 } from "@material-tailwind/react";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { AiOutlineShareAlt } from "react-icons/ai";
 import myContext from "../context/data/myContext";
 import { GiEagleHead } from "react-icons/gi";
 import SearchDialogBox from "../components/SearchDialogBox"
 import ShareDialogBox from "../components/ShareDialogBox";
+
 
 
 export default function Nav() {
@@ -20,6 +20,8 @@ export default function Nav() {
 
   const context = useContext(myContext);
   const { mode, toggleMode } = context;
+
+  const admin = localStorage.getItem('admin')
 
   // All NavList
   const navList = (
@@ -108,7 +110,7 @@ export default function Nav() {
 
             {/* Admin Profile Pic */}
             <div>
-              <Link to={"/dashboard"}>
+             {admin ?  <Link to={"/dashboard"}>
                 <div className="">
                   <Avatar
                     key={1}
@@ -126,7 +128,7 @@ export default function Nav() {
                     }}
                   />
                 </div>
-              </Link>
+              </Link> : ""}
             </div>
 
             {/* dark And Light Button */}
