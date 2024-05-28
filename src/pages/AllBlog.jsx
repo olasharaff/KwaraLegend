@@ -5,6 +5,9 @@ import Layout from "../components/Layout";
 function AllBlog() {
   const context = useContext(myContext);
   const { mode } = context;
+  
+
+
 
   return (
     <Layout>
