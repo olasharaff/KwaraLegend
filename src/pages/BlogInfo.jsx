@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import myContext from "../context/data/myContext";
 import { useParams } from "react-router";
-import { doc, getDoc } from "firebase/firestore";
+import { Timestamp, addDoc, collection, doc, getDoc, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "../Firebase/FirebaseConfig";
 import Layout from "../components/Layout";
 import Loader from "../components/Loader";
+import Comment from "../components/Comment";
+import toast from "react-hot-toast";
 
 function BlogInfo() {
   const context = useContext(myContext);
@@ -33,6 +35,58 @@ function BlogInfo() {
    }, [params.id, setLoading]);
 
 
+const [fullName, setFullName] = useState("");
+const [commentText, setCommentText] = useState("");
+
+const addComment = async () => {
+  const commentRef = collection(
+    db,
+    "blogPost/" + `${params.id}/` + "comment"
+  );
+  try {
+    await addDoc(commentRef, {
+      fullName,
+      commentText,
+      time: Timestamp.now(),
+      date: new Date().toLocaleString("en-US", {
+        month: "short",
+        day: "2-digit",
+        year: "numeric",
+      }),
+    });
+    toast.success("Comment Add Successfully");
+    setFullName("");
+    setCommentText("");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const [allComment, setAllComment] = useState([]);
+
+const getcomment = async () => {
+  try {
+    const q = query(
+      collection(db, "blogPost/" + `${params.id}/` + "comment/"),
+      orderBy("time")
+    );
+    const data = onSnapshot(q, (QuerySnapshot) => {
+      let productsArray = [];
+      QuerySnapshot.forEach((doc) => {
+        productsArray.push({ ...doc.data(), id: doc.id });
+      });
+      setAllComment(productsArray);
+      console.log(productsArray);
+    });
+    return () => data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+useEffect(() => {
+  getcomment();
+}, []);
 
   //* Create markup function
   function createMarkup(c) {
@@ -154,6 +208,14 @@ function BlogInfo() {
             </div>
           )}
         </div>
+        <Comment
+          addComment={addComment}
+          commentText={commentText}
+          setcommentText={setCommentText}
+          allComment={allComment}
+          fullName={fullName}
+          setFullName={setFullName}
+        />
       </section>
     </Layout>
   );
