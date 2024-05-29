@@ -37,7 +37,7 @@ function BlogPostCard() {
                       className=" w-full"
                       src={thumbnail}
                       alt="blog"
-                      onClick={() => navigate(`/bloginfo/:${id}`)}
+                      onClick={() => navigate(`/bloginfo/${id}`)}
                     />
 
                     {/* Top Items  */}
