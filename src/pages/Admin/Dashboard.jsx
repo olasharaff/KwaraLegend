@@ -7,10 +7,9 @@ import {auth} from "../../Firebase/FirebaseConfig"
 
 function Dashboard() {
   const context = useContext(myContext);
-  const { mode, getAllBlog } = context;
+  const { mode, getAllBlog, deleteBlogs } = context;
   const navigate = useNavigate()
 
-  console.log(getAllBlog)
 
   const logout = async () =>{
     await auth.signOut()
@@ -90,8 +89,7 @@ function Dashboard() {
         </div>
 
         {/* Line  */}
-        <hr
-          className={`border-2
+        <hr className={`border-2
                  ${mode === "dark" ? "border-gray-300" : "border-gray-400"}`}
         />
 
@@ -168,8 +166,7 @@ function Dashboard() {
 
                 {/* tbody  */}
                 {getAllBlog.length > 0 ? <>{getAllBlog.map((item, index) => {
-                  const {thumbnail, date} = item;
-                  console.log(item)
+                  const {thumbnail, date, id} = item;
                   return (
                     <tbody key={index}>
                       <tr
@@ -229,6 +226,7 @@ function Dashboard() {
                         <td
                           style={{ color: mode === "dark" ? "white" : "black" }}
                           className="px-6 py-4"
+                          onClick={() => deleteBlogs(id)}
                         >
                           <button className=" px-4 py-1 rounded-lg text-white font-bold bg-red-500">
                             Delete

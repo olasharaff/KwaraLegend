@@ -2,14 +2,14 @@ import { Fragment, useContext, useState } from "react";
 import { Dialog, DialogBody, Input } from "@material-tailwind/react";
 import myContext from "../context/data/myContext";
 import { AiOutlineSearch } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
 
 export default function SearchDialogBox() {
   const [open, setOpen] = useState(false);
-
   const handleOpen = () => setOpen(!open);
-
   const context = useContext(myContext);
-  const { mode } = context;
+  const navigate = useNavigate()
+  const { mode, searchKey, setSearchKey, getAllBlog } = context;
   return (
     <Fragment>
       {/* Search Icon  */}
@@ -36,6 +36,8 @@ export default function SearchDialogBox() {
               label="Type here..."
               className=" bg-[#2C3A47]"
               name="searchkey"
+              value={searchKey}
+              onChange={(e) => setSearchKey(e.target.value)}
               containerProps={{
                 className: "min-w-[288px]",
               }}
@@ -44,29 +46,31 @@ export default function SearchDialogBox() {
 
           {/* Blog Card  */}
           <div className="flex justify-center flex-wrap  sm:mx-auto sm:mb-2 -mx-2  mt-4 mb-2 ">
-            <div className="p-2 sm:w-1/4 w-full ">
-              <div className=" container mx-auto px-4 bg-gray-200 p-2 rounded-lg ">
-                {/* Blog Thumbnail  */}
-                <img
-                  className="w-20 mb-2 rounded-lg"
-                  src={
-                    "https://firebasestorage.googleapis.com/v0/b/blog-fea71.appspot.com/o/blogimage%2FReact%20Introduction.png?alt=media&token=1ba7496b-2cbc-450c-ab1a-57e19882dc76"
-                  }
-                  alt=""
-                />
+           {getAllBlog.filter((obj) => obj.blogs.title.toLowerCase().includes(searchKey)).map((item, index) => {
+            return (
+              <div className="p-2 sm:w-1/4 w-full " key={index}>
+                <div className=" container mx-auto px-4 bg-gray-200 p-2 rounded-lg " onClick={() => navigate(`/bloginfo/${item.id}`)}>
+                  {/* Blog Thumbnail  */}
+                  <img
+                    className="w-20 mb-2 rounded-lg"
+                    src={item.thumbnail}
+                    alt=""
+                  />
 
-                {/* Blog Date  */}
-                <p className="w-40 text-sm">{"date"}</p>
+                  {/* Blog Date  */}
+                  <p className="w-40 text-sm">{item.date}</p>
 
-                {/* Blog Title  */}
-                <h1>{"title"}</h1>
+                  {/* Blog Title  */}
+                  <h1>{item.blogs.title}</h1>
+                </div>
               </div>
-            </div>
+            );
+           })}
           </div>
 
           {/* Heading  */}
           <div className=" text-center">
-            <h1 className=" text-gray-600">Powered By Devknus</h1>
+            <h1 className=" text-gray-600">Powered By AsharafDev</h1>
           </div>
         </DialogBody>
       </Dialog>

@@ -1,11 +1,14 @@
 import React, { useContext } from "react";
 import myContext from "../context/data/myContext";
 import Layout from "../components/Layout";
+import { useNavigate } from "react-router-dom";
 
 
 function AllBlog() {
   const context = useContext(myContext);
   const { mode, getAllBlog } = context;
+
+  const navigate = useNavigate();
 
   
 
@@ -53,6 +56,7 @@ function AllBlog() {
                       className=" w-full"
                       src={thumbnail}
                       alt="blog"
+                      onClick={() => navigate(`/bloginfo/${id}`)}
                     
                     />
 
@@ -94,8 +98,7 @@ function AllBlog() {
                               : " rgb(30, 41, 59)",
                         }}
                       >
-                        Photo booth fam kinfolk cold-pressed sriracha leggings
-                        jianbing microdosing tousled waistcoat.
+                     {item.blogs.content}
                       </p>
                     </div>
                   </div>
