@@ -74,9 +74,8 @@ function BlogPostCard() {
                             {item.blogs.title}
                           </h1>
 
-                          {/* Blog Description  */}
-                          <p
-                            className="leading-relaxed mb-3"
+                          <h1
+                            className="leading-relaxed mb-1 "
                             style={{
                               color:
                                 mode === "dark"
@@ -84,8 +83,13 @@ function BlogPostCard() {
                                   : " rgb(30, 41, 59)",
                             }}
                           >
-                            {item.blogs.content}
-                          </p>
+                            <span className="line-clamp-3">
+                              {item.blogs.content}
+                            </span>
+                            <span className="text-sm text-red-600" onClick={()=> navigate(`/bloginfo/${id}`)}>                            
+                              Read Full News
+                            </span>
+                          </h1>
                         </div>
                       </div>
                     </div>
